@@ -5,10 +5,10 @@ var uglify = require("uglify-js");
 var etag = require('etag');
 
 
-function jade_out_server(tpl_path, opts) {
+function server(tpl_path, opts) {
   if (!tpl_path) {
     //默认目录
-    tpl_path = path.join(process.cwd(), 'jade_out');
+    tpl_path = path.join(process.cwd(), 'jade_compiled');
   }
 
   opts = opts || {};
@@ -22,7 +22,7 @@ function jade_out_server(tpl_path, opts) {
   opts.uglify = typeof opts.uglify === 'undefined' ?
     (process.env.NODE_ENV === 'production' ? true : false) : opts.watch;
 
-  //jade_out_server.conf = opts;
+  //server.conf = opts;
 
   return function(req, res, next) {
 
@@ -41,7 +41,7 @@ function jade_out_server(tpl_path, opts) {
         }).code;
       }
 
-      //jade_out_server.create_cache(real_path, cache_key);
+      //server.create_cache(real_path, cache_key);
       _etag = etag(jade.cache[cache_key]);
 
       if (is_first && opts.watch) {
@@ -59,7 +59,7 @@ function jade_out_server(tpl_path, opts) {
 
         });
       }
-      //console.log('jade_out_server 索引创建!');
+      //console.log('server 索引创建!');
     } else {
       _etag = etag(jade.cache[cache_key]);
     }
@@ -68,11 +68,12 @@ function jade_out_server(tpl_path, opts) {
       res.setHeader('Cache-Control', "max-age=" + opts.maxAge);
     }
     res.setHeader('Etag', _etag);
-    var outstr = 'define(function () { return ' + jade.cache[cache_key] + '})'
+    var outstr = 'define(function(){return ' + jade.cache[cache_key] + '})'
     res.send(outstr);
   }
 }
 
+server.jade_runtime_min_path = path.join(__dirname, 'jade-runtime-min.js');
 
 
-module.exports = jade_out_server;
+module.exports = server;

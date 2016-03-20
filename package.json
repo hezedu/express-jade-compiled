@@ -1,0 +1,30 @@
+{
+  "name": "express-jade-compiled",
+  "version": "0.0.1",
+  "main": "index.js",
+  "keywords": [
+    "browser",
+    "nodejs",
+    "jade",
+    "front",
+    "compiled"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hezedu/express-jade-compiled.git"
+  },
+  "author": {
+    "name": "hezedu"
+  },
+  "dependencies": {
+    "etag": "^1.7.0",
+    "jade": "^1.11.0",
+    "uglify-js": "^2.6.2"
+  },
+  "licenses": "MIT",
+  "email": "hezedu@hotmail.com",
+  "description": "jade for front",
+  "bugs": {
+    "url": "https://github.com/hezedu/express-jade-compiled/issues"
+  }
+}

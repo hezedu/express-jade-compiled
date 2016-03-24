@@ -26,19 +26,62 @@ function server(tpl_path, opts) {
 
   return function(req, res, next) {
 
+    var multiple = req.query.multiple;
     var real_path = path.join(tpl_path, req.path);
-    var cache_key = real_path + ':client';
+
+    var cache_key = '';
+    if(multiple){
+      cache_key = real_path + ':multiple:client';
+    }else{
+      var cache_key = real_path + ':client';
+    }
+
     var _etag = '';
 
     if (!jade.cache[cache_key]) { //如果没有缓存的话.
+
+      //console.log('multiple');
       var is_first = (undefined === jade.cache[cache_key]);
-      var jsFunctionString = jade.compileFileClient(real_path, {
-        cache: true
-      });
-      if (opts.uglify) {
-        jade.cache[cache_key] = uglify.minify(jsFunctionString, {
-          fromString: true
-        }).code;
+      if(!multiple){
+        var jsFunctionString = jade.compileFileClient(real_path, {
+          cache: true
+        });
+        if (opts.uglify) {
+          jade.cache[cache_key] = uglify.minify(jsFunctionString, {
+            fromString: true
+          }).code;
+        }
+      }else{
+
+        try{
+          var doc = fs.readFileSync(real_path, 'utf-8');
+        }catch(err){
+          err.name = 'jade_compiled MULTIPLE: ' + err.name;
+          return next(err);
+        }
+        
+          var dump = [];
+          doc = doc.split('//-$MULTIPLE:');
+          for (var i = 1, len = doc.length; i < len; i++) {
+            var curr = doc[i];
+            var first_n = curr.indexOf('\n');
+
+            var key = curr.substr(0, first_n-1);
+
+            var v = curr.substr(first_n + 1);
+            v = jade.compileClient(v, {name:'tpl'+ i});
+
+            if (opts.uglify) {
+               v = uglify.minify(v, {
+                fromString: true
+              }).code;
+            }
+            dump.push('"' + key + '":' + v);
+          }
+
+          dump = dump.join(',');
+          dump = '{' + dump + '}';
+          jade.cache[cache_key] = dump;
       }
 
       //server.create_cache(real_path, cache_key);
@@ -59,6 +102,7 @@ function server(tpl_path, opts) {
 
         });
       }
+
       //console.log('server 索引创建!');
     } else {
       _etag = etag(jade.cache[cache_key]);

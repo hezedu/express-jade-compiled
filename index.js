@@ -14,77 +14,79 @@ function server(tpl_path, opts) {
   opts = opts || {};
   opts.tpl_path = tpl_path; //模版目录
   //缓存期限 默认0
-  opts.maxAge = typeof opts.maxAge === 'undefined' ? 0 : opts.maxAge;
-  //监测模版文件是否修改 默认:测试环境 是 , 生产环境 否
-  opts.watch = typeof opts.watch === 'undefined' ? 
-  ('production' === process.env.NODE_ENV ? false : true ): opts.watch;
+  opts.maxAge = opts.maxAge === undefined ? 0 : opts.maxAge;
+  //监测模版文件是否修改 默认:是
+  opts.watch = opts.watch === undefined ? true : opts.watch;
   //是否压缩 默认:测试环境 否 , 生产环境 是
-  opts.uglify = typeof opts.uglify === 'undefined' ?
+  opts.uglify = opts.uglify === undefined ?
     (process.env.NODE_ENV === 'production' ? true : false) : opts.watch;
 
   //server.conf = opts;
 
   return function(req, res, next) {
 
-    var multiple = req.query.multiple;
     var real_path = path.join(tpl_path, req.path);
 
-    var cache_key = '';
-    if(multiple){
-      cache_key = real_path + ':multiple:client';
-    }else{
-      var cache_key = real_path + ':client';
-    }
 
+    var cache_key = real_path + ':client';
     var _etag = '';
+    var splitKey = '//-COMPONENT ';
 
     if (!jade.cache[cache_key]) { //如果没有缓存的话.
 
-      //console.log('multiple');
       var is_first = (undefined === jade.cache[cache_key]);
-      if(!multiple){
-        var jsFunctionString = jade.compileFileClient(real_path, {
-          cache: true
+
+      try {
+        var doc = fs.readFileSync(real_path, 'utf-8');
+      } catch (err) {
+        err.name = 'express-jade-compiled ' + err.name;
+        return next(err);
+      }
+
+
+      doc = doc.split(splitKey);
+      var dump = '';
+      if (doc.length === 1) {
+        dump = doc[0];
+        dump = jade.compileClient(dump, {
+          name: 'tpl'
         });
+
         if (opts.uglify) {
-          jade.cache[cache_key] = uglify.minify(jsFunctionString, {
+          dump = uglify.minify(dump, {
             fromString: true
           }).code;
         }
-      }else{
 
-        try{
-          var doc = fs.readFileSync(real_path, 'utf-8');
-        }catch(err){
-          err.name = 'jade_compiled MULTIPLE: ' + err.name;
-          return next(err);
-        }
-        
-          var dump = [];
-          doc = doc.split('//-$MULTIPLE:');
-          for (var i = 1, len = doc.length; i < len; i++) {
-            var curr = doc[i];
-            var first_n = curr.indexOf('\n');
+      } else {
 
-            var key = curr.substr(0, first_n-1);
+        var dump = [];
+        for (var i = 1, len = doc.length; i < len; i++) {
+          var curr = doc[i];
+          var first_n = curr.indexOf('\n');
 
-            var v = curr.substr(first_n + 1);
-            v = jade.compileClient(v, {name:'tpl'+ i});
+          var key = curr.substr(0, first_n - 1);
 
-            if (opts.uglify) {
-               v = uglify.minify(v, {
-                fromString: true
-              }).code;
-            }
-            dump.push('"' + key + '":' + v);
+          var v = curr.substr(first_n + 1);
+          v = jade.compileClient(v, {
+            name: 'tpl' + i
+          });
+
+          if (opts.uglify) {
+            v = uglify.minify(v, {
+              fromString: true
+            }).code;
           }
+          dump.push('"' + key + '":' + v);
+        }
 
-          dump = dump.join(',');
-          dump = '{' + dump + '}';
-          jade.cache[cache_key] = dump;
+        dump = dump.join(',');
+        dump = '{' + dump + '}';
       }
 
-      //server.create_cache(real_path, cache_key);
+
+      jade.cache[cache_key] = dump;
+
       _etag = etag(jade.cache[cache_key]);
 
       if (is_first && opts.watch) {
@@ -97,13 +99,10 @@ function server(tpl_path, opts) {
 
             setTimeout(function() {
               is_change = false
-            }, 1000);
+            }, 500);
           }
-
         });
       }
-
-      //console.log('server 索引创建!');
     } else {
       _etag = etag(jade.cache[cache_key]);
     }

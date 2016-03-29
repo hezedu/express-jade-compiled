@@ -3,7 +3,7 @@ var path = require('path');
 var jade = require('jade');
 var uglify = require("uglify-js");
 var etag = require('etag');
-
+var watch = require('watch');
 
 function server(tpl_path, opts) {
   if (!tpl_path) {
@@ -16,12 +16,23 @@ function server(tpl_path, opts) {
   //缓存期限 默认0
   opts.maxAge = opts.maxAge === undefined ? 0 : opts.maxAge;
   //监测模版文件是否修改 默认:是
-  opts.watch = opts.watch === undefined ? true : opts.watch;
+  opts.watch = opts.watch === undefined ? 
+  (process.env.NODE_ENV === 'production' ? false : true) : opts.watch;
   //是否压缩 默认:测试环境 否 , 生产环境 是
   opts.uglify = opts.uglify === undefined ?
     (process.env.NODE_ENV === 'production' ? true : false) : opts.watch;
 
-  //server.conf = opts;
+  //监控模版目录
+  if(opts.watch){
+    watch.watchTree(tpl_path,{persistent: true, interval: 1000}, function (fileName, curr, prev) {
+      if(typeof fileName ==='string'){
+        var cache_key = fileName + ':client';
+        if (jade.cache[cache_key]) {
+          jade.cache[cache_key] = null; //销毁缓存
+        }
+      }
+    });
+  }
 
   return function(req, res, next) {
 
@@ -31,9 +42,8 @@ function server(tpl_path, opts) {
     var cache_key = real_path + ':client';
     var _etag = '';
     var splitKey = '//-COMPONENT ';
-
+    console.log('cache_key', cache_key);
     if (!jade.cache[cache_key]) { //如果没有缓存的话.
-
       var is_first = (undefined === jade.cache[cache_key]);
 
       try {
@@ -89,7 +99,7 @@ function server(tpl_path, opts) {
 
       _etag = etag(jade.cache[cache_key]);
 
-      if (is_first && opts.watch) {
+/*      if (is_first && opts.watch) {
         var is_change = false;
         fs.watch(real_path, function() {
           if (!is_change) {
@@ -102,7 +112,7 @@ function server(tpl_path, opts) {
             }, 500);
           }
         });
-      }
+      }*/
     } else {
       _etag = etag(jade.cache[cache_key]);
     }

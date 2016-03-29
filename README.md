@@ -24,7 +24,7 @@ jade_compiled(path.join(__dirname, 'jade_compiled'),{
 ```
 ###jade runtime.js
 前端需要引用Jade的runtime.js，本项目已压缩好了(Just 3kb)并提供了一个静态属性：jade_runtime_min_path
-```
+```js
 app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_path));
 ```
 ##客户端引用示例

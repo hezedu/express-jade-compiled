@@ -22,6 +22,54 @@ jade_compiled(path.join(__dirname, 'jade_compiled'),{
   uglify:false //是否压缩模版编译文件, 线上环境默认为true, 开发环境为false;
 });
 ```
+##特性：//-COMPONENT
+新加了//-COMPONENT标识来分割模版，以达到多重利用的目地。
+未加//-COMPONENT
+```jade
+h1 hello
+h1 world
+```
+编译后：
+```js
+define(function() {
+  return function tpl(locals) {
+    var buf = [];
+    var jade_mixins = {};
+    var jade_interp;
+    buf.push("<h1>hello</h1><h1>world</h1>");;
+    return buf.join("");
+  }
+})
+```
+
+加上//-COMPONENT
+```jade
+//-COMPONENT hello
+h1 hello
+//-COMPONENT world
+h1 world
+```
+编译后：
+```js
+define(function() {
+  return {
+    "hello": function tpl1(locals) {
+      var buf = [];
+      var jade_mixins = {};
+      var jade_interp;
+      buf.push("<h1>hello</h1>");;
+      return buf.join("");
+    },
+    "world": function tpl2(locals) {
+      var buf = [];
+      var jade_mixins = {};
+      var jade_interp;
+      buf.push("<h1>world</h1>");;
+      return buf.join("");
+    }
+  }
+})
+```
 ####jade runtime.js
 
 前端需要引用Jade的runtime.js，本项目已压缩好了一个(3KB),并提供了一个静态属性：`jade_runtime_min_path`

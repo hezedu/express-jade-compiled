@@ -31,6 +31,7 @@ h1 world
 ```
 编译后：
 ```js
+//format后
 define(function() {
   return function tpl(locals) {
     var buf = [];
@@ -51,6 +52,7 @@ h1 world
 ```
 编译后：
 ```js
+//format后
 define(function() {
   return {
     "hello": function tpl1(locals) {

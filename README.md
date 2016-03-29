@@ -25,7 +25,7 @@ jade_compiled(path.join(__dirname, 'jade_compiled'),{
 ##特性：//-COMPONENT
 新加了//-COMPONENT标识来分割模版，以达到多重利用的目地。
 
-未加//-COMPONENT
+jade未加//-COMPONENT
 ```jade
 h1 hello
 h1 world
@@ -44,7 +44,7 @@ define(function() {
 })
 ```
 
-加上//-COMPONENT
+jade加上//-COMPONENT
 ```jade
 //-COMPONENT hello
 h1 hello

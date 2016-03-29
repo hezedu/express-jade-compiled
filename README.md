@@ -22,8 +22,9 @@ jade_compiled(path.join(__dirname, 'jade_compiled'),{
   uglify:false //是否压缩模版编译文件, 线上环境默认为true, 开发环境为false;
 });
 ```
-###jade runtime.js
-前端需要引用Jade的runtime.js，本项目已压缩好了(3KB)并提供了一个静态属性：`jade_runtime_min_path`
+####jade runtime.js
+
+前端需要引用Jade的runtime.js，本项目已压缩好了一个(3KB),并提供了一个静态属性：`jade_runtime_min_path`
 ```js
 app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_path));
 ```

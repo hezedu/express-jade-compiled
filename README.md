@@ -28,7 +28,6 @@ jade_compiled(path.join(__dirname, 'jade_compiled'),{
 app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_path));
 ```
 ##客户端引用示例
-前端需要引用jade的runtime,在node_modules/jade/runtime.js
 ```html
 <!DOCTYPE html>
 <html>

@@ -1,4 +1,4 @@
-# jade_out初版
+# express-jade-compiled
 将 [jade](https://github.com/jadejs/jade) 模版编译好并用**AMD规范**包装好，供前端使用。
 
 它是一个 [express](https://github.com/strongloop/express) 中间件,需求express 4.x.

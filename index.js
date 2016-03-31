@@ -33,7 +33,7 @@ function server(tpl_path, opts) {
       }
     });
   }
-
+  var splitKey = '//-COMPONENT ';
   return function(req, res, next) {
 
     var real_path = path.join(tpl_path, req.path);
@@ -41,8 +41,8 @@ function server(tpl_path, opts) {
 
     var cache_key = real_path + ':client';
     var _etag = '';
-    var splitKey = '//-COMPONENT ';
-    console.log('cache_key', cache_key);
+    
+    //console.log('cache_key', cache_key);
     if (!jade.cache[cache_key]) { //如果没有缓存的话.
       var is_first = (undefined === jade.cache[cache_key]);
 

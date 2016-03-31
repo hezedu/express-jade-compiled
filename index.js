@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var jade = require('jade');
 var uglify = require("uglify-js");
-var etag = require('etag');
 var watch = require('watch');
 
 function server(tpl_path, opts) {
@@ -40,7 +39,6 @@ function server(tpl_path, opts) {
 
 
     var cache_key = real_path + ':client';
-    var _etag = '';
     
     //console.log('cache_key', cache_key);
     if (!jade.cache[cache_key]) { //如果没有缓存的话.
@@ -94,10 +92,7 @@ function server(tpl_path, opts) {
         dump = '{' + dump + '}';
       }
 
-
       jade.cache[cache_key] = dump;
-
-      _etag = etag(jade.cache[cache_key]);
 
 /*      if (is_first && opts.watch) {
         var is_change = false;
@@ -113,14 +108,12 @@ function server(tpl_path, opts) {
           }
         });
       }*/
-    } else {
-      _etag = etag(jade.cache[cache_key]);
     }
     res.setHeader('Content-Type', 'application/javascript');
     if (opts.maxAge > 0) {
       res.setHeader('Cache-Control', "max-age=" + opts.maxAge);
     }
-    res.setHeader('Etag', _etag);
+
     var outstr = 'define(function(){return ' + jade.cache[cache_key] + '})'
     res.send(outstr);
   }

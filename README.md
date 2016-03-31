@@ -75,7 +75,7 @@ define(function() {
 ```
 ####jade runtime.js
 
-前端需要引用Jade的runtime.js，本项目已压缩好了一个(3KB),并提供了一个静态属性：`jade_runtime_min_path`
+前端需要引用Jade的runtime.js，本项目已压缩好了一个(3KB),并提供了一个静态属性：`jade_runtime_min_path`你可以:
 ```js
 app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_path));
 ```
@@ -89,11 +89,11 @@ app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_pa
   </head>
 
   <body>
-    <div id ="test"></div>
-
     <script type="text/javascript">
       require('/jade_compiled/some.jade', function(tpl){
-        tpl()
+        document.write(tpl());
+        //or
+        //document.write(tpl.main());
       })
     </script>
   </body>

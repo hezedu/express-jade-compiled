@@ -102,7 +102,7 @@ app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_pa
 ##QA
 1.为什么我修改了模版，但没有生效？
 
-答：这一定是文件名大小写与请求路径不一致导致的。
+答：这一定是**文件名大小写**与请求路径不一致导致的。
 
 
 

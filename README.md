@@ -89,7 +89,7 @@ app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_pa
 
   <body>
     <script type="text/javascript">
-      require('/jade_compiled/some.jade', function(tpl){
+      require(['/jade_compiled/some.jade'], function(tpl){
         document.write(tpl());
         //or
         //document.write(tpl.main());

@@ -17,8 +17,8 @@ app.use('/jade_compiled',jade_compiled(path.join(__dirname, 'jade_compiled')));
 ```
 ### Options
 - `maxAge` 模版缓存时间，默认0。
-- `watch` 是否监测文件修改,动态更新缓存. 开发环境为true, 线上为false;
-- `uglify` 是否压缩编译文件, 线上环境默认为true, 开发环境为false;
+- `watch` 是否监测文件修改,动态更新缓存. 默认开发环境为true, 线上为false;
+- `uglify` 是否压缩编译文件, 默认线上环境默认为true, 开发环境为false;
 - `wrap` 包装编译好的文件,用`$COMPILED$`代表编译后的字符串。默认是AMD规范：`define(function(){return $COMPILED$})`
 
 

@@ -25,15 +25,14 @@ app.use('/jade_compiled',jade_compiled(path.join(__dirname, 'jade_compiled')));
 ##特性：//-COMPONENT
 新加了`//-COMPONENT`标识来分割模版，以达到多重利用的目地。
 
-___例__:
+####例:
 jade未加//-COMPONENT
 ```jade
 h1 hello
 h1 world
 ```
-编译后：
+编译后(format后)：
 ```js
-//format后
 define(function() {
   return function tpl(locals) {
     var buf = [];
@@ -45,16 +44,15 @@ define(function() {
 })
 ```
 
-jade加上//-COMPONENT
+而jade加上//-COMPONENT
 ```jade
 //-COMPONENT hello
 h1 hello
 //-COMPONENT world
 h1 world
 ```
-编译后：
+编译后&&format后)：
 ```js
-//format后
 define(function() {
   return {
     "hello": function tpl1(locals) {

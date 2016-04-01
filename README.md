@@ -23,7 +23,7 @@ jade_compiled(path.join(__dirname, 'jade_compiled'),{
   wrap: 
 });
 ```
-## Options
+### Options
 - `maxAge` 模版缓存时间，默认0。
 - `watch` 是否监测文件修改,动态更新缓存. 开发环境为true, 线上为false;
 - `uglify` 是否压缩编译文件, 线上环境默认为true, 开发环境为false;

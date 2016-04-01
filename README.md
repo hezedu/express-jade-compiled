@@ -22,9 +22,10 @@ app.use('/jade_compiled',jade_compiled(path.join(__dirname, 'jade_compiled')));
 - `wrap` 包装编译好的文件,`$COMPILED$`字符代表编译后的字符串，默认是AMD规范：`define(function(){return $COMPILED$})`
 
 
-##特性：COMPONENT
-新加了//-COMPONENT标识来分割模版，以达到多重利用的目地。
+##特性：//-COMPONENT
+新加了`//-COMPONENT`标识来分割模版，以达到多重利用的目地。
 
+___例__:
 jade未加//-COMPONENT
 ```jade
 h1 hello

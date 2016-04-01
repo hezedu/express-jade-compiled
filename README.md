@@ -1,5 +1,5 @@
 # express-jade-compiled
-将 [jade](https://github.com/jadejs/jade) 模版编译好并用**AMD规范**包装好，供前端使用。
+ [jade](https://github.com/jadejs/jade) 模版服务器端编译，前端使用。
 
 它是一个 [express](https://github.com/strongloop/express) 中间件,需求express 4.x.
 ###install
@@ -7,7 +7,7 @@
 npm install express-jade-compiled
 ```
 ##API
-###jade_compiled(path, opts);
+###jade_compiled(path, options);
 例：
 ```js
 var jade_compiled = require('express-jade-compiled');
@@ -19,9 +19,15 @@ app.use('/jade_compiled',
 jade_compiled(path.join(__dirname, 'jade_compiled'),{
   maxAge: 0 , //模版缓存时间，默认0。
   watch:true,//监测模版文件是否修改,并动态更新模版缓存. 开发环境为true, 线上为false;
-  uglify:false //是否压缩模版编译文件, 线上环境默认为true, 开发环境为false;
+  uglify:false, //是否压缩模版编译文件, 线上环境默认为true, 开发环境为false;
+  wrap: 
 });
 ```
+## Options
+  - `maxAge` 模版缓存时间，默认0。
+  - `watch` 是否监测文件修改,动态更新缓存. 开发环境为true, 线上为false;
+  - `uglify` 是否压缩编译文件, 线上环境默认为true, 开发环境为false;
+  - `wrap` 包装编译好的文件,`$COMPILED$`字符代表编译后的字符串，默认是AMD规范：`define(function(){return $COMPILED$})`
 ##特性：//-COMPONENT
 新加了//-COMPONENT标识来分割模版，以达到多重利用的目地。
 

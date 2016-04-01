@@ -14,14 +14,6 @@ var jade_compiled = require('express-jade-compiled');
 //简单
 app.use('/jade_compiled',jade_compiled(path.join(__dirname, 'jade_compiled')));
 
-//opts
-app.use('/jade_compiled',
-jade_compiled(path.join(__dirname, 'jade_compiled'),{
-  maxAge: 0 , //模版缓存时间，默认0。
-  watch:true,//监测模版文件是否修改,并动态更新模版缓存. 开发环境为true, 线上为false;
-  uglify:false, //是否压缩模版编译文件, 线上环境默认为true, 开发环境为false;
-  wrap: 
-});
 ```
 ### Options
 - `maxAge` 模版缓存时间，默认0。

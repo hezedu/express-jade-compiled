@@ -51,7 +51,7 @@ h1 hello
 //-COMPONENT world
 h1 world
 ```
-编译后&&format后)：
+编译后(format后)：
 ```js
 define(function() {
   return {

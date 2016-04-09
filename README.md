@@ -84,7 +84,7 @@ app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_pa
 <html>
   <head>
     <script src="/jade_runtime_min.js"></script>
-    <script src="require.js"></script>
+    <script src="require.js"></script>//默认wrap：AMD 
   </head>
 
   <body>

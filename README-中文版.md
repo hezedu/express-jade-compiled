@@ -1,14 +1,14 @@
 # express-jade-compiled
- [Jade](https://github.com/jadejs/jade) template compiled in server, use for front-end.
+ [jade](https://github.com/jadejs/jade) 模版服务器端编译，前端使用。
 
-This is a [express](https://github.com/strongloop/express) middleware,need express 4.x.
+它是一个 [express](https://github.com/strongloop/express) 中间件,需求express 4.x.
 ###install
 ```
 npm install express-jade-compiled
 ```
 ##API
 ###jade_compiled(path, options);
-Example:
+例：
 ```js
 var jade_compiled = require('express-jade-compiled');
 //简单
@@ -16,23 +16,22 @@ app.use('/jade_compiled',jade_compiled(path.join(__dirname, 'jade_compiled')));
 
 ```
 ### Options
-- `maxAge` compiled file's maxAge,default: 0.
-- `watch` Is watching file’s change and dynamically update the cache. default: dev is true, production is false;
-- `uglify` Whether to compress files compiled, default: production is true, dev is false;
-- `wrap` Package compiled files,use `$COMPILED$` string delegate compiled. default is AMD  
-standard: `"define(function(){return $COMPILED$})"`
+- `maxAge` 模版文件的maxAge，默认0。
+- `watch` 是否监测文件修改,动态更新缓存. 默认开发环境为true, 线上为false;
+- `uglify` 是否压缩编译文件, 默认线上环境为true, 开发环境为false;
+- `wrap` 包装编译好的文件,用`$COMPILED$`代表编译后的字符串。默认是AMD规范：`"define(function(){return $COMPILED$})"`
 
 
-##Property：//-COMPONENT
-Add this `//-COMPONENT` symbol to split template, In order to achieve the purpose of multiple use.
+##特性：//-COMPONENT
+新加了`//-COMPONENT`标识来分割模版，以达到多重利用的目地。
 
-####Example:
-Jade not added //-COMPONENT
+####例:
+jade未加//-COMPONENT
 ```jade
 h1 hello
 h1 world
 ```
-compiled(format)：
+编译后(format后)：
 ```js
 define(function() {
   return function tpl(locals) {
@@ -45,14 +44,14 @@ define(function() {
 })
 ```
 
-jade added //-COMPONENT
+而jade加上//-COMPONENT
 ```jade
 //-COMPONENT hello
 h1 hello
 //-COMPONENT world
 h1 world
 ```
-compiled(format)：
+编译后(format后)：
 ```js
 define(function() {
   return {
@@ -75,17 +74,17 @@ define(function() {
 ```
 ####jade runtime.js
 
-Front-end needs to reference Jade's runtime.js，The project has a compression(3KB),And provides a static attr：`jade_runtime_min_path` you can:
+前端需要引用Jade的runtime.js，本项目已压缩好了一个(3KB),并提供了一个静态属性：`jade_runtime_min_path`你可以:
 ```js
 app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_path));
 ```
-##Client sample
+##客户端引用示例
 ```html
 <!DOCTYPE html>
 <html>
   <head>
     <script src="/jade_runtime_min.js"></script>
-    <script src="require.js"></script> <!--default wrap：AMD，So there used require -->
+    <script src="require.js"></script> <!--默认wrap：AMD，所以此处引了require -->
   </head>
 
   <body>
@@ -100,9 +99,9 @@ app.use('/jade_runtime_min.js', express.static(jade_compiled.jade_runtime_min_pa
 </html>
 ```
 ##QA
-1.Why do I modify a template, but there is no effect?
+1.为什么我修改了模版，但没有生效？
 
-A: This must be the case file name is not consistent with the request URL.
+答：这一定是**文件名大小写**与请求URL不一致导致的。
 
 
 

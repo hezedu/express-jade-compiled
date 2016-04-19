@@ -3,7 +3,7 @@
 
 它是一个 [express](https://github.com/strongloop/express) 中间件,需求express 4.x.
 
-[Express-jade-compiled document in English](https://github.com/hezedu/express-jade-compiled/blob/master/README.en.md)
+[Document in English](https://github.com/hezedu/express-jade-compiled/blob/master/README.en.md)
 ###install
 ```
 npm install express-jade-compiled
